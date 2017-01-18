@@ -1,0 +1,17 @@
+version: '2'
+services:
+    itaste-mongodb:
+        container_name: itaste-mongodb
+        image: mongo:3.3.12
+        ports:
+            - "27017:27017"
+        command: mongos --configdb itaste-mongodb-config
+    itaste-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    itaste-mongodb-config:
+        image: mongo:mongo:3.3.12
+        container_name: itaste-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
